@@ -1,26 +1,57 @@
 @import "tailwindcss";
 
 :root {
+  /* Primary Color - Blizzard Blue */
+  --color-primary: #99e7f1;
+  --color-primary-dark: #7ad4e0;
+  --color-primary-light: #b8eff6;
+
+  /* Secondary Color */
+  --color-secondary: #0054c5;
+  --color-secondary-dark: #003d91;
+  --color-secondary-light: #1a6fd9;
+
+  /* CTA Color */
+  --color-cta: #ff6b00;
+  --color-cta-dark: #e55f00;
+  --color-cta-light: #ff8533;
+
+  /* Neutral Colors */
+  --color-neutral: #3d3d3d;
+  --color-neutral-light: #666666;
+  --color-neutral-dark: #1a1a1a;
+
+  /* Semantic Colors */
+  --color-info: #1890ff;
+  --color-success: #52c41a;
+  --color-warning: #faad14;
+  --color-error: #ff4d4f;
+
+  /* Background Colors */
   --background: #ffffff;
-  --foreground: #171717;
+  --background-secondary: #eeeeee;
+  --foreground: #3d3d3d;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-poppins);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Custom theme colors for Tailwind */
+  --color-primary: #99e7f1;
+  --color-primary-dark: #7ad4e0;
+  --color-secondary: #0054c5;
+  --color-cta: #ff6b00;
+  --color-neutral: #3d3d3d;
+  --color-info: #1890ff;
+  --color-success: #52c41a;
+  --color-warning: #faad14;
+  --color-error: #ff4d4f;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-poppins), "Poppins", sans-serif;
 }
