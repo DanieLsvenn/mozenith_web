@@ -74,15 +74,12 @@ export default function ProfilePage() {
                 <p className="text-[#666666]">@{user?.username}</p>
 
                 <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
-                  {user?.roles?.map((role) => (
-                    <Badge
-                      key={role.id}
-                      variant={getRoleBadgeVariant(role.name)}
-                    >
+                  {user?.role && (
+                    <Badge variant={getRoleBadgeVariant(user.role)}>
                       <Shield className="mr-1 h-3 w-3" />
-                      {role.name}
+                      {user.role}
                     </Badge>
-                  ))}
+                  )}
                   {user?.emailVerified && (
                     <Badge variant="success">Email Verified</Badge>
                   )}
@@ -184,7 +181,7 @@ export default function ProfilePage() {
                         <div className="flex items-center gap-2">
                           <Badge variant="success">LOGIN</Badge>
                           <span className="text-xs text-[#666666]">
-                            {formatDate(log.createdAt)}
+                            {formatDate(log.timestamp)}
                           </span>
                         </div>
                         <div className="mt-1 flex items-center gap-2 text-sm text-[#666666]">

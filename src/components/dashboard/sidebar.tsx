@@ -18,6 +18,8 @@ import {
   Menu,
   X,
   MonitorSmartphone,
+  CreditCard,
+  BarChart3,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -33,6 +35,18 @@ const navItems: NavItem[] = [
     label: "Dashboard",
     href: ROUTES.DASHBOARD,
     icon: <LayoutDashboard className="h-5 w-5" />,
+  },
+  {
+    label: "Analytics",
+    href: ROUTES.ANALYTICS,
+    icon: <BarChart3 className="h-5 w-5" />,
+    adminOnly: true,
+  },
+  {
+    label: "Transactions",
+    href: ROUTES.TRANSACTIONS,
+    icon: <CreditCard className="h-5 w-5" />,
+    adminOnly: true,
   },
   {
     label: "Users",
@@ -162,7 +176,7 @@ export function DashboardSidebar() {
                   {user?.fullName || user?.username}
                 </p>
                 <p className="truncate text-xs text-white/70">
-                  {user?.roles?.[0]?.name || "User"}
+                  {user?.role || "User"}
                 </p>
               </div>
               <ChevronDown

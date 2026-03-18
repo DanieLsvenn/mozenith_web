@@ -6,3 +6,5 @@ export * from "./permissions";
 export * from "./sessions";
 export * from "./activity-logs";
 export * from "./token-version";
+export * from "./transactions";
+export * from "./quota";

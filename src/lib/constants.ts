@@ -1,4 +1,4 @@
-export const API_BASE_URL = "https://mozenith-be.onrender.com";
+export const API_BASE_URL = "https://be.ducanhvipro.dpdns.org";
 
 export const AUTH_COOKIES = {
   ACCESS_TOKEN: "mozenith_access_token",
@@ -27,6 +27,8 @@ export const ROUTES = {
   SESSIONS: "/dashboard/sessions",
   ACTIVITY_LOGS: "/dashboard/activity-logs",
   PROFILE: "/dashboard/profile",
+  TRANSACTIONS: "/dashboard/transactions",
+  ANALYTICS: "/dashboard/analytics",
 } as const;
 
 export const ACTIVITY_TYPES = [

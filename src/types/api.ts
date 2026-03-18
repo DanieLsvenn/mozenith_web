@@ -206,6 +206,88 @@ export interface ResetPasswordRequestWithOtp {
 }
 
 // ============================================
+// Transaction Types
+// ============================================
+
+export interface PaymentTransaction {
+  id: number;
+  userId: number;
+  txnRef: string;
+  amount: number;
+  status: "PENDING" | "SUCCESS" | "FAILED" | "CANCELLED";
+  // PayOS fields
+  orderCode?: string;
+  payosCode?: string;
+  payosDescription?: string;
+  payosTransactionRef?: string;
+  paymentMethod?: string;
+  counterAccountNumber?: string;
+  counterAccountName?: string;
+  // Legacy VNPay fields (old transactions)
+  vnpResponseCode?: string;
+  vnpTransactionStatus?: string;
+  vnpBankCode?: string;
+  vnpBankTranNo?: string;
+  vnpCardType?: string;
+  vnpOrderInfo?: string;
+  vnpTransactionNo?: string;
+  vnpPayDate?: string;
+  createdAt: string;
+}
+
+export interface PaginatedTransactions {
+  content: PaymentTransaction[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+
+export interface TransactionQueryParams extends PaginationParams {
+  id?: number;
+  userId?: number;
+  txnRef?: string;
+  status?: string;
+  startDate?: string;
+  endDate?: string;
+  sortBy?: string;
+  sortDir?: "ASC" | "DESC";
+}
+
+// ============================================
+// Quota Types
+// ============================================
+
+export type PackageType = "FREE" | "PREMIUM";
+
+export interface QuotaResponse {
+  packageType: PackageType;
+  remainingToday: number;
+  quotaResetDate: string;
+  premiumExpiryDate?: string;
+}
+
+export interface PackageRequest {
+  packageType: PackageType;
+}
+
+// ============================================
+// Statistics Types
+// ============================================
+
+export interface DashboardStats {
+  totalUsers: number;
+  totalTransactions: number;
+  totalRevenue: number;
+  recentTransactions: PaymentTransaction[];
+  userGrowth: number;
+  premiumUsers: number;
+}
+
+// ============================================
 // Pagination Types
 // ============================================
 

@@ -194,7 +194,7 @@ export default function SessionsPage() {
                   </TableHeader>
                   <TableBody>
                     {usersData.content.map((u) => (
-                      <TableRow key={u.id}>
+                      <TableRow key={u.userId}>
                         <TableCell>
                           <div className="flex items-center gap-3">
                             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#99E7F1] text-sm font-medium text-[#0054C5]">
@@ -215,21 +215,22 @@ export default function SessionsPage() {
                         <TableCell>{u.email}</TableCell>
                         <TableCell>
                           <div className="flex flex-wrap gap-1">
-                            {u.roles?.map((role) => (
+                            {u.role ? (
                               <Badge
-                                key={role.id}
                                 variant={
-                                  role.name === ROLES.ADMIN
+                                  u.role === ROLES.ADMIN
                                     ? "destructive"
-                                    : role.name === ROLES.MANAGER
+                                    : u.role === ROLES.MANAGER
                                       ? "warning"
                                       : "success"
                                 }
                                 className="text-xs"
                               >
-                                {role.name}
+                                {u.role}
                               </Badge>
-                            ))}
+                            ) : (
+                              "—"
+                            )}
                           </div>
                         </TableCell>
                         <TableCell>
@@ -238,9 +239,9 @@ export default function SessionsPage() {
                               variant="ghost"
                               size="sm"
                               onClick={() =>
-                                openForceLogoutModal(u.id, u.username)
+                                openForceLogoutModal(u.userId, u.username)
                               }
-                              disabled={u.id === user?.id}
+                              disabled={u.userId === user?.userId}
                               className="text-red-500 hover:text-red-600 disabled:opacity-50"
                             >
                               <Power className="h-4 w-4" />

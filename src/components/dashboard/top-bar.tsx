@@ -40,15 +40,14 @@ export function TopBar({ title, description }: TopBarProps) {
               {user?.fullName || user?.username}
             </p>
             <div className="flex items-center gap-1">
-              {user?.roles?.map((role) => (
+              {user?.role && (
                 <Badge
-                  key={role.id}
-                  variant={getRoleBadgeVariant(role.name)}
+                  variant={getRoleBadgeVariant(user.role)}
                   className="text-[10px]"
                 >
-                  {role.name}
+                  {user.role}
                 </Badge>
-              ))}
+              )}
             </div>
           </div>
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#99E7F1] text-sm font-medium text-[#0054C5]">

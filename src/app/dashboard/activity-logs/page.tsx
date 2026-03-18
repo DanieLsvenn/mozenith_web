@@ -50,7 +50,7 @@ export default function ActivityLogsPage() {
   const isAdmin = hasRole(ROLES.ADMIN);
 
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(PAGINATION.DEFAULT_SIZE);
+  const [pageSize, setPageSize] = useState<number>(PAGINATION.DEFAULT_SIZE);
   const [filterType, setFilterType] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -373,10 +373,18 @@ export default function ActivityLogsPage() {
                 </Table>
                 <div className="border-t border-[#EEEEEE] p-4">
                   <Pagination
-                    currentPage={data.number}
-                    totalPages={data.totalPages}
-                    totalElements={data.totalElements}
-                    pageSize={data.size}
+                    currentPage={data.number ?? page}
+                    totalPages={
+                      data.totalPages ??
+                      Math.ceil(
+                        (data.totalElements ?? data.content?.length ?? 0) /
+                          pageSize,
+                      )
+                    }
+                    totalElements={
+                      data.totalElements ?? data.content?.length ?? 0
+                    }
+                    pageSize={data.size ?? pageSize}
                     onPageChange={setPage}
                     onPageSizeChange={(size) => {
                       setPageSize(size);

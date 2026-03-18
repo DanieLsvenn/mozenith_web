@@ -22,6 +22,7 @@ import {
 import { ROLES } from "@/lib/constants";
 import { useUsers } from "@/hooks/use-users";
 import { useActivityLogs } from "@/hooks/use-activity-logs";
+import { useTransactionStats } from "@/hooks/use-transactions";
 import { formatDate } from "@/lib/utils";
 import {
   Users,
@@ -32,6 +33,8 @@ import {
   User as UserIcon,
   Mail,
   MapPin,
+  CreditCard,
+  Banknote,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -39,15 +42,15 @@ export default function DashboardPage() {
   const { user, hasRole } = useAuth();
   const isAdmin = hasRole(ROLES.ADMIN);
 
-  // Pagination state for users
+  // Pagination state for users table
   const [usersPage, setUsersPage] = useState(0);
   const [usersPageSize, setUsersPageSize] = useState(5);
 
-  // Pagination state for activity logs
+  // Pagination state for activity logs table
   const [logsPage, setLogsPage] = useState(0);
   const [logsPageSize, setLogsPageSize] = useState(5);
 
-  // Fetch users (admin only)
+  // Fetch users for table display (admin only)
   const {
     data: usersData,
     isLoading: usersLoading,
@@ -56,7 +59,12 @@ export default function DashboardPage() {
     isAdmin ? { page: usersPage, size: usersPageSize } : { page: 0, size: 0 },
   );
 
-  // Fetch activity logs (admin only)
+  // Fetch all users for count (with larger size to get accurate count)
+  const { data: usersCountData } = useUsers(
+    isAdmin ? { page: 0, size: 1000 } : { page: 0, size: 0 },
+  );
+
+  // Fetch activity logs for table display (admin only)
   const {
     data: logsData,
     isLoading: logsLoading,
@@ -65,27 +73,73 @@ export default function DashboardPage() {
     isAdmin ? { page: logsPage, size: logsPageSize } : { page: 0, size: 0 },
   );
 
+  // Fetch all activity logs for count
+  const { data: logsCountData } = useActivityLogs(
+    isAdmin ? { page: 0, size: 1000 } : { page: 0, size: 0 },
+  );
+
+  // Fetch transaction stats (admin only)
+  const { data: transactionStats } = useTransactionStats();
+
+  // Calculate counts from data (use count data for totals, fallback to table data)
+  const totalUsers =
+    usersCountData?.totalElements ??
+    usersCountData?.content?.length ??
+    usersData?.totalElements ??
+    usersData?.content?.length ??
+    0;
+  const totalActivities =
+    logsCountData?.totalElements ??
+    logsCountData?.content?.length ??
+    logsData?.totalElements ??
+    logsData?.content?.length ??
+    0;
+  const totalTransactions = transactionStats?.totalTransactions ?? 0;
+
+  const formatAmount = (amount: number) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
+
   const stats = [
     {
       label: "Total Users",
-      value: usersData?.totalElements?.toString() || "—",
-      change: `${usersData?.totalPages || 0} pages`,
+      value:
+        totalUsers > 0 ? totalUsers.toString() : usersLoading ? "..." : "0",
+      change: `${usersData?.totalPages || Math.ceil(totalUsers / usersPageSize) || 0} pages`,
       icon: Users,
       href: "/dashboard/users",
       adminOnly: true,
     },
     {
-      label: "Active Roles",
-      value: "3",
-      change: "ADMIN, MANAGER, STAFF",
-      icon: Shield,
-      href: "/dashboard/roles",
+      label: "Total Revenue",
+      value: transactionStats
+        ? formatAmount(transactionStats.totalRevenue)
+        : "—",
+      change: `${transactionStats?.successfulTransactions || 0} successful payments`,
+      icon: Banknote,
+      href: "/dashboard/transactions",
+      adminOnly: true,
+    },
+    {
+      label: "Transactions",
+      value: totalTransactions > 0 ? totalTransactions.toString() : "0",
+      change: `${transactionStats?.pendingTransactions || 0} pending`,
+      icon: CreditCard,
+      href: "/dashboard/transactions",
       adminOnly: true,
     },
     {
       label: "Total Activity",
-      value: logsData?.totalElements?.toString() || "—",
-      change: `${logsData?.totalPages || 0} pages`,
+      value:
+        totalActivities > 0
+          ? totalActivities.toString()
+          : logsLoading
+            ? "..."
+            : "0",
+      change: `${logsData?.totalPages || Math.ceil(totalActivities / logsPageSize) || 0} pages`,
       icon: Activity,
       href: "/dashboard/activity-logs",
       adminOnly: true,
@@ -193,7 +247,7 @@ export default function DashboardPage() {
                         </TableHeader>
                         <TableBody>
                           {usersData.content.map((u) => (
-                            <TableRow key={u.id}>
+                            <TableRow key={u.userId}>
                               <TableCell>
                                 <div className="flex items-center gap-3">
                                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#99E7F1] text-sm font-medium text-[#0054C5]">
@@ -219,20 +273,21 @@ export default function DashboardPage() {
                               </TableCell>
                               <TableCell>
                                 <div className="flex flex-wrap gap-1">
-                                  {u.roles?.map((role) => (
+                                  {u.role ? (
                                     <Badge
-                                      key={role.id}
                                       variant={
-                                        role.name === "ADMIN"
+                                        u.role === "ADMIN"
                                           ? "destructive"
-                                          : role.name === "MANAGER"
+                                          : u.role === "MANAGER"
                                             ? "warning"
                                             : "success"
                                       }
                                     >
-                                      {role.name}
+                                      {u.role}
                                     </Badge>
-                                  ))}
+                                  ) : (
+                                    "—"
+                                  )}
                                 </div>
                               </TableCell>
                               <TableCell>

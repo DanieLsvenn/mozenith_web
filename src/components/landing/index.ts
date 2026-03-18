@@ -4,9 +4,27 @@ export {
   ParallaxText,
   MagneticButton,
   GlowingCard,
-  AnimatedCounter,
+  AnimatedCounter as AnimatedCounterLegacy,
   TypewriterText,
   ScrollIndicator,
   AnimatedGradientBorder,
   Ripple,
 } from "./animated-elements";
+
+export {
+  NeuralNetworkBackground,
+  GlitchText,
+  TiltCard,
+  GridLinesBackground,
+  MagneticCursor,
+  AnimatedCounter,
+  FloatingOrbs,
+  TextReveal,
+  SpotlightCard,
+  TypewriterEffect,
+  StaggeredGrid,
+  MorphingShapes,
+  ScrollProgress,
+  LogoCarousel,
+  FeatureCarousel,
+} from "./tech-animations";
