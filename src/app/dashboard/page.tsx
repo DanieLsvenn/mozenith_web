@@ -23,6 +23,7 @@ import { ROLES } from "@/lib/constants";
 import { useUsers } from "@/hooks/use-users";
 import { useActivityLogs } from "@/hooks/use-activity-logs";
 import { useTransactionStats } from "@/hooks/use-transactions";
+import { useFeedback } from "@/hooks/use-feedback";
 import { formatDate } from "@/lib/utils";
 import {
   Users,
@@ -35,6 +36,8 @@ import {
   MapPin,
   CreditCard,
   Banknote,
+  Star,
+  MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -80,6 +83,11 @@ export default function DashboardPage() {
 
   // Fetch transaction stats (admin only)
   const { data: transactionStats } = useTransactionStats();
+
+  // Fetch recent reviews (admin only)
+  const { data: feedbackData } = useFeedback(
+    isAdmin ? { page: 0, size: 5 } : { page: 0, size: 0 },
+  );
 
   // Calculate counts from data (use count data for totals, fallback to table data)
   const totalUsers =
@@ -431,6 +439,79 @@ export default function DashboardPage() {
                       />
                     </div>
                   </>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Recent Reviews */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="h-5 w-5" />
+                  Recent Reviews
+                </CardTitle>
+                <Link
+                  href="/dashboard/reviews"
+                  className="text-sm font-medium text-[#0054C5] hover:text-[#003D91]"
+                >
+                  View all →
+                </Link>
+              </CardHeader>
+              <CardContent>
+                {!feedbackData?.content?.length ? (
+                  <EmptyState
+                    icon={<MessageSquare className="h-12 w-12" />}
+                    title="No reviews yet"
+                    description="No feedback has been submitted by users yet."
+                  />
+                ) : (
+                  <div className="space-y-4">
+                    {feedbackData.content.map((review) => (
+                      <div
+                        key={review.id}
+                        className="flex items-start gap-4 rounded-lg border border-[#E5E7EB] p-4"
+                      >
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#99E7F1] text-sm font-bold text-[#0054C5]">
+                          {review.fullName?.charAt(0) ||
+                            review.username?.charAt(0) ||
+                            "?"}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium text-[#3D3D3D]">
+                                {review.fullName || review.username}
+                              </p>
+                              <p className="text-xs text-[#666666]">
+                                @{review.username}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                  key={star}
+                                  className={`h-4 w-4 ${
+                                    review.rating >= star
+                                      ? "fill-[#FF6B00] text-[#FF6B00]"
+                                      : "text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                              <span className="ml-1 text-sm font-medium">
+                                {review.rating.toFixed(1)}
+                              </span>
+                            </div>
+                          </div>
+                          <p className="mt-2 text-sm text-[#555555]">
+                            {review.comment}
+                          </p>
+                          <p className="mt-1 text-xs text-[#999999]">
+                            {formatDate(review.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </CardContent>
             </Card>

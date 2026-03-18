@@ -5,3 +5,4 @@ export * from "./use-sessions";
 export * from "./use-activity-logs";
 export * from "./use-transactions";
 export * from "./use-quota";
+export * from "./use-feedback";

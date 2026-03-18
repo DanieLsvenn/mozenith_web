@@ -8,3 +8,4 @@ export * from "./activity-logs";
 export * from "./token-version";
 export * from "./transactions";
 export * from "./quota";
+export * from "./feedback";

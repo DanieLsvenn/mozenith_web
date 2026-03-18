@@ -20,6 +20,7 @@ import {
   MonitorSmartphone,
   CreditCard,
   BarChart3,
+  Star,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -75,6 +76,12 @@ const navItems: NavItem[] = [
     label: "Activity Logs",
     href: ROUTES.ACTIVITY_LOGS,
     icon: <Activity className="h-5 w-5" />,
+    adminOnly: true,
+  },
+  {
+    label: "Reviews",
+    href: ROUTES.REVIEWS,
+    icon: <Star className="h-5 w-5" />,
     adminOnly: true,
   },
 ];

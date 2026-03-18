@@ -300,3 +300,30 @@ export interface DateRangeParams extends PaginationParams {
   startDate: string;
   endDate: string;
 }
+
+// ============================================
+// Feedback / Reviews Types
+// ============================================
+
+export interface FeedbackItem {
+  id: number;
+  userId: number;
+  username: string;
+  fullName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
+}
+
+export interface PaginatedFeedback {
+  content: FeedbackItem[];
+  // Fields may come from @PageResponse aspect or raw Spring Page<T>
+  totalElements?: number;
+  totalPages?: number;
+  pageSize?: number;
+  pageNumber?: number;
+  size?: number;
+  number?: number;
+  last?: boolean;
+  numberOfElements?: number;
+}

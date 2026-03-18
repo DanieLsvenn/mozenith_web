@@ -29,6 +29,7 @@ export const ROUTES = {
   PROFILE: "/dashboard/profile",
   TRANSACTIONS: "/dashboard/transactions",
   ANALYTICS: "/dashboard/analytics",
+  REVIEWS: "/dashboard/reviews",
 } as const;
 
 export const ACTIVITY_TYPES = [
