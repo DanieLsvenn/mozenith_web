@@ -85,8 +85,13 @@ export default function DashboardPage() {
   const { data: transactionStats } = useTransactionStats();
 
   // Fetch recent reviews (admin only)
-  const { data: feedbackData } = useFeedback(
+  const { data: feedbackData, isLoading: feedbackLoading } = useFeedback(
     isAdmin ? { page: 0, size: 5 } : { page: 0, size: 0 },
+  );
+
+  // Fetch all reviews for total count (admin only)
+  const { data: feedbackAllData, isLoading: feedbackAllLoading } = useFeedback(
+    isAdmin ? { page: 0, size: 1000 } : { page: 0, size: 0 },
   );
 
   // Calculate counts from data (use count data for totals, fallback to table data)
@@ -103,6 +108,14 @@ export default function DashboardPage() {
     logsData?.content?.length ??
     0;
   const totalTransactions = transactionStats?.totalTransactions ?? 0;
+  const totalReviews =
+    feedbackAllData?.totalElements ??
+    feedbackAllData?.content?.length ??
+    feedbackData?.totalElements ??
+    feedbackData?.content?.length ??
+    0;
+
+  const totalReviewsLoading = feedbackLoading || feedbackAllLoading;
 
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -150,6 +163,19 @@ export default function DashboardPage() {
       change: `${logsData?.totalPages || Math.ceil(totalActivities / logsPageSize) || 0} pages`,
       icon: Activity,
       href: "/dashboard/activity-logs",
+      adminOnly: true,
+    },
+    {
+      label: "Total Reviews",
+      value:
+        totalReviews > 0
+          ? totalReviews.toString()
+          : totalReviewsLoading
+            ? "..."
+            : "0",
+      change: `${feedbackAllData?.totalPages ?? feedbackData?.totalPages ?? 0} pages`,
+      icon: Star,
+      href: "/dashboard/reviews",
       adminOnly: true,
     },
     {

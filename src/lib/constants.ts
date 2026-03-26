@@ -1,3 +1,4 @@
+// export const API_BASE_URL = "https://mozenith-be.onrender.com";
 export const API_BASE_URL = "https://be.ducanhvipro.dpdns.org";
 
 export const AUTH_COOKIES = {
